@@ -1,29 +1,121 @@
-## 地址映射
-Erc1155: 0xE31fC5Cfe8618f599cF50B954E46CdAd82E9FE01
-tTUSD-V2: 0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B
-ERC721: 0xdCF53E67375DaD97A273f0Ae49E5EBf2fEf44D91
+# Ladder-sdk-beta
 
-Route Proxy: 0x6e2c879382520c7b15927902eef1c0fbc1f8de91
+> version: 0.0.2
 
 
-Swap 32.8 tUSDC-V2 for 1 TNT-3
-https://sepolia.etherscan.io//tx/0x68fb9d40ea96dd41385df3ad32178aabd6034c076925b486429cc1ec29f11922
-#   Name	Type	Data
-0	amountOut	uint256	1
-1	amountInMax	uint256	33044929932784881063
-2	path	address[]	0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B
-0xA4560E8B4694B437d77452eBc2dE179AAA1137C3
-0xe4C6eFEcc92C822684C075Ea73C4760B5D19b018
-3	to	address	0x88888888B0A018D28947b7FbDe08E0B408de9f70
-4	deadline	uint256	1685331660
+
+## Quick Start
+
+Use `npm` or `yarn` to install `Ladder-sdk-beta`
+
+```shell
+npm install ladder-sdk-beta
+or
+yarn add ladder-sdk-beta
+```
+
+🔧 This is a sdk tool written in nodejs, fully compliant with the typescript specification.
+
+🧪 This project is still in the experimental stage, any questions welcome feedback.
 
 
-Swap 1 TNT-3 for 410 tUSDC-V2
-https://sepolia.etherscan.io//tx/0x48852f70cbf2bd577a791f4b4695ca911a563dcfc6b382ba20750cf6f7386f78
-#	Name	Type	Data
-0	amountIn	uint256	1
-1	amountOutMin	uint256	408577933919032411107
-2	path	address[]	0xe4C6eFEcc92C822684C075Ea73C4760B5D19b018
-0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B
-3	to	address	0x88888888B0A018D28947b7FbDe08E0B408de9f70
-4	deadline	uint256	1685331192
+
+## Methods
+
+### Oracle
+
+Price oracle program
+
+You can very easily check the real-time price of your sell or buy NFT
+
+```ts
+		const sepolia = new ChainNetwork(SupportChain.Sepolia)
+    const oracle = new Oracle(sepolia)
+    
+ 		const price =  await oracle.getPrice('0xdCF53E67375DaD97A273f0Ae49E5EBf2fEf44D91', 1, 'Sell')
+```
+
+
+
+### Client
+
+SDK main program
+
+You can do any major operation you want to do with ladder through Client
+
+- swapExactErc721ForTokens
+- swapExactTokensForErc721
+- swapExactErc1155ForTokens (Coming soon)
+- swapExactTokensForErc1155 (Coming soon)
+
+
+
+```ts
+import { ChainNetwork } from "../src/class/ChainNetwork"
+import { SupportChain } from "../src/web3"
+import { Client, Oracle } from "../src/class"
+import { ethers } from "ethers"
+
+const testClient = async () => {
+    const sepolia = new ChainNetwork(SupportChain.Sepolia)
+    const signer = new ethers.Wallet('xxx')
+    const oracle = new Oracle(sepolia)
+    const client = new Client(signer, sepolia)
+
+    const tokenErc20 = '0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B'
+    const tokenErc721 = '0xdCF53E67375DaD97A273f0Ae49E5EBf2fEf44D91'
+
+    // const amountInMax = await oracle.getPrice(tokenErc721, 1, 'Buy')
+    // const transaction = await client.swapExactTokensForErc721(1, amountInMax, [tokenErc20, tokenErc721])
+
+    const amountOutMin = await oracle.getPrice(tokenErc721, 1, 'Sell')
+    const transaction = await client.swapExactErc721ForTokens(1, amountOutMin, [tokenErc721, tokenErc20])
+
+    console.log(transaction.hash)
+    await transaction.wait()
+}
+
+testClient()
+```
+
+
+
+## Tools
+
+### ChainNetwork
+
+Instantiate your EVM chain, in many cases you can get a default network very quickly and you can use it very easily
+
+```ts
+	const sepolia = new ChainNetwork(SupportChain.Sepolia)
+```
+
+
+
+### Checker
+
+Project checker that can be used to check certain check judgments in a project, such as checking whether an address belongs to an Erc20 or NFT
+
+```ts
+    const sepolia = new ChainNetwork(SupportChain.Sepolia)
+    const sepoliaChecker = new Checker(sepolia) 
+
+		const erc20IsErc721 = await sepoliaChecker.checkIfERC721(expErc20Address)
+    const erc20IsErc1155 = await sepoliaChecker.checkIfERC1155(expErc20Address)
+```
+
+
+
+### Currency
+
+Quickly get an instance of native Token or ERC20, fully referenced in the Uniswap-sdk design
+
+
+
+
+
+## License
+
+MIT License
+
+Copyright (c) 2023 ladder-lab
