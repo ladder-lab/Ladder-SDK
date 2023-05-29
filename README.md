@@ -3,7 +3,6 @@
 > version: 0.0.2
 
 
-
 ## Quick Start
 
 Use `npm` or `yarn` to install `Ladder-sdk-beta`
@@ -29,10 +28,10 @@ Price oracle program
 You can very easily check the real-time price of your sell or buy NFT
 
 ```ts
-		const sepolia = new ChainNetwork(SupportChain.Sepolia)
-    const oracle = new Oracle(sepolia)
+const sepolia = new ChainNetwork(SupportChain.Sepolia)
+const oracle = new Oracle(sepolia)
     
- 		const price =  await oracle.getPrice('0xdCF53E67375DaD97A273f0Ae49E5EBf2fEf44D91', 1, 'Sell')
+const price =  await oracle.getPrice('0xdCF53E67375DaD97A273f0Ae49E5EBf2fEf44D91', 1, 'Sell')
 ```
 
 
@@ -87,7 +86,7 @@ testClient()
 Instantiate your EVM chain, in many cases you can get a default network very quickly and you can use it very easily
 
 ```ts
-	const sepolia = new ChainNetwork(SupportChain.Sepolia)
+const sepolia = new ChainNetwork(SupportChain.Sepolia)
 ```
 
 
@@ -97,11 +96,11 @@ Instantiate your EVM chain, in many cases you can get a default network very qui
 Project checker that can be used to check certain check judgments in a project, such as checking whether an address belongs to an Erc20 or NFT
 
 ```ts
-    const sepolia = new ChainNetwork(SupportChain.Sepolia)
-    const sepoliaChecker = new Checker(sepolia) 
+const sepolia = new ChainNetwork(SupportChain.Sepolia)
+const sepoliaChecker = new Checker(sepolia) 
 
-		const erc20IsErc721 = await sepoliaChecker.checkIfERC721(expErc20Address)
-    const erc20IsErc1155 = await sepoliaChecker.checkIfERC1155(expErc20Address)
+const erc20IsErc721 = await sepoliaChecker.checkIfERC721(expErc20Address)
+const erc20IsErc1155 = await sepoliaChecker.checkIfERC1155(expErc20Address)
 ```
 
 
@@ -109,8 +108,6 @@ Project checker that can be used to check certain check judgments in a project, 
 ### Currency
 
 Quickly get an instance of native Token or ERC20, fully referenced in the Uniswap-sdk design
-
-
 
 
 
