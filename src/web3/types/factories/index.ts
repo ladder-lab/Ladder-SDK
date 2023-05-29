@@ -2,6 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Multicall__factory } from "./Multicall__factory";
+export { RouteErc1155__factory } from "./RouteErc1155__factory";
+export { RouteErc721__factory } from "./RouteErc721__factory";
 export { UniversalErc1155__factory } from "./UniversalErc1155__factory";
 export { UniversalErc20__factory } from "./UniversalErc20__factory";
 export { UniversalErc721__factory } from "./UniversalErc721__factory";
