@@ -13,12 +13,12 @@ export class Client {
     }
 
     private generatePath(): string[] {
-        
+
 
         return []
     }
 
-    swapExactNFTForTokens(
+    swapExactErc721ForTokens(
         signer: ethers.Wallet,
         params: {
             amountIn: number,
@@ -31,7 +31,7 @@ export class Client {
 
     }
 
-    swapTokensForExactNFT(
+    swapTokensForExactErc721(
         signer: ethers.Wallet,
         params: {
             amountOut: number,

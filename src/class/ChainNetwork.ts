@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { ChainStateInterface, SupportChain, chainStateList, multicallAddress } from '../web3'
+import { ChainStateInterface, SupportChain, chainStateList } from '../web3'
 
 import invariant from 'tiny-invariant'
 
@@ -15,7 +15,6 @@ export class ChainNetwork {
         this.state = chainStateList[chain]
         this.provider = new ethers.providers.JsonRpcProvider(this.state.rpcUrls[0])
         this.chainId = this.state.chainId
-        this.multicallAddr = multicallAddress[chain]
     }
 
     updateProviderRpc(rpc: string) {
