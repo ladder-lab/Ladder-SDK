@@ -12,8 +12,10 @@ export class Client {
         this.provider = provider
     }
 
-    private generatePath(): string[] {
 
+
+    private generatePath(): string[] {
+        
 
         return []
     }

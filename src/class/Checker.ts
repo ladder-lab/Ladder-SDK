@@ -1,12 +1,13 @@
 import { ethers } from "ethers";
 import { UniversalErc721__factory, UniversalErc1155__factory } from "../web3/types";
+import { ChainNetwork } from "./ChainNetwork";
 
 
 export class Checker {
     private provider: ethers.providers.JsonRpcProvider
 
-    constructor(provider: ethers.providers.JsonRpcProvider) {
-        this.provider = provider
+    constructor(network: ChainNetwork) {
+        this.provider = network.provider
     }
 
     // 检查地址是否是 ERC-721 NFT 地址

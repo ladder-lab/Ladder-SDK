@@ -4,7 +4,7 @@ import { ChainNetwork } from '../src/class/ChainNetwork'
 
 const checkerExample = async () => {
     const sepolia = new ChainNetwork(SupportChain.Sepolia)
-    const sepoliaChecker = new Checker(sepolia.provider)
+    const sepoliaChecker = new Checker(sepolia)
 
     const expErc20Address = '0x85edb7a0cbacf5bd641e0ff5d6270bef9c72bd6b'
     const expErc721Address = '0xdCF53E67375DaD97A273f0Ae49E5EBf2fEf44D91'
