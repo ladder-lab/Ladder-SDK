@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { ChainNetwork } from "./ChainNetwork";
-import { RouteErc1155Address, RouteErc721Address, SupportChain } from "../web3";
+import { RouteErc1155Address, RouteErc721Address, SupportChain, USDT } from "../web3";
 import { Checker } from "./Checker";
 import { RouteErc1155__factory, RouteErc721__factory } from "../web3/types";
 import { getAddress, keccak256, solidityPack } from "ethers/lib/utils";
@@ -35,17 +35,20 @@ export class Oracle {
          * 2. 查询返回价格
          */
         const nftType = await this.getAddressType(nftAddress)
+        console.log("🚀 ~ nftType:", nftType)
+        const currencyAddress = USDT[this.network.chain]
+        console.log("🚀 ~ currencyAddress:", currencyAddress)
 
         if (nftType === 'Erc721') {
-            const erc721Route = RouteErc721__factory.connect(RouteErc721Address[SupportChain.Sepolia], this.provider)
+            const erc721Route = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.provider)
 
             const queryMethod = direction === 'Buy' ? erc721Route.getAmountsIn : erc721Route.getAmountsOut
             const route = direction === 'Buy' ? [
-                '0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B',
+                currencyAddress,
                 nftAddress
             ] : [
                 nftAddress,
-                '0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B'
+                currencyAddress
             ]
             const price = await queryMethod(amount, route)
 
@@ -53,15 +56,15 @@ export class Oracle {
 
             return price[direction === 'Buy' ? 0 : 1].toString()
         } else if (nftType === 'Erc1155') {
-            const erc1155Route = RouteErc1155__factory.connect(RouteErc1155Address[SupportChain.Sepolia], this.provider)
+            const erc1155Route = RouteErc1155__factory.connect(RouteErc1155Address[this.network.chain], this.provider)
 
             const queryMethod = direction === 'Buy' ? erc1155Route.getAmountsIn : erc1155Route.getAmountsOut
             const route = direction === 'Buy' ? [
-                '0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B',
+                currencyAddress,
                 this.getHashAddress(nftAddress, 1)
             ] : [
                 this.getHashAddress(nftAddress, 1),
-                '0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B'
+                currencyAddress
             ]
             const price = await queryMethod(amount, route)
 

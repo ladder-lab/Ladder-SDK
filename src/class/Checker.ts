@@ -13,11 +13,11 @@ export class Checker {
     // 检查地址是否是 ERC-20 NFT 地址
     async checkIfERC20(address: string) {
         try {
-            const erc721Contract = UniversalErc20__factory.connect(address, this.provider)
-            await erc721Contract.totalSupply();
+            const erc20Contract = UniversalErc20__factory.connect(address, this.provider)
+            await erc20Contract.totalSupply();
             return true;
         } catch (error) {
-            console.error('Error checking ERC-20:', error);
+            // console.error('Error checking ERC-20:', error);
             return false;
         }
     }
@@ -29,7 +29,7 @@ export class Checker {
             const supportsInterface = await erc721Contract.supportsInterface('0x80ac58cd'); // ERC-721 的支持接口方法标识为 0x80ac58cd
             return supportsInterface;
         } catch (error) {
-            console.error('Error checking ERC-721:', error);
+            // console.error('Error checking ERC-721:', error);
             return false;
         }
     }
@@ -41,7 +41,7 @@ export class Checker {
             const supportsInterface = await erc721Contract.supportsInterface('0xd9b67a26'); // ERC-1155 的支持接口方法标识为 0xd9b67a26
             return supportsInterface;
         } catch (error) {
-            console.error('Error checking ERC-1155:', error);
+            // console.error('Error checking ERC-1155:', error);
             return false;
         }
     }
