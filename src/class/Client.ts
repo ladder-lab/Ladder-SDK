@@ -124,12 +124,10 @@ export class Client {
         return erc721RouteWithSigner.addLiquidityETH721(
             token721, nftIds, nftIds.length, amountETHMin,
             this.signer.address,
-            Math.floor(Date.now() / 1000 + 3600)
+            Math.floor(Date.now() / 1000 + 3600),
+            { value: amountETHMin }
         )
     }
-
-  
-
 
     async addLiquidity1155(params: {
         token1155: string,

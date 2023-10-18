@@ -83,6 +83,39 @@ testClient()
 
 
 
+## Contract
+
+If you want to call the internal methods of a contract, you can do so via the contract exposed by `class Currency`
+
+For example to get a user's token balance
+
+```ts
+const sepolia = new ChainNetwork(SupportChain.Sepolia)
+const tokenContract = new CurrencyErc20(sepolia, <token contract address>)
+
+balance = tokenContract.contract.balanceOf('0x....')
+```
+
+If you want to do an APPROVE NFT operation, you can do this
+
+```ts
+const sepolia = new ChainNetwork(SupportChain.Sepolia)
+const signer = new Wallet(<your private key>)
+const erc721Contract = new CurrencyErc20(sepolia, <erc721 contract address>)
+const erc721ContractWithSigner = erc721Contract.contract.connect(signer)
+
+const erc721HasAllowance = await erc721Contract.isApprovedForAll(signer.address, RouteErc721Address[SupportChain.Sepolia])
+ 
+if(!erc721HasAllowance){
+   const approve721Transaction = await erc721ContractWithSigner.setApprovalForAll(RouteErc721Address[SupportChain.Sepolia], true)
+        await approve721Transaction.wait()
+}
+```
+
+🔔 sdk integrates typechain as a type hinting tool, and you can call the contract's internal functions just as easily as you can with sdk
+
+
+
 ## Tools
 
 ### ChainNetwork

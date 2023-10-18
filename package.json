@@ -1,7 +1,7 @@
 {
   "name": "ladder-sdk-beta",
   "description": "ladder-sdk-bate",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
