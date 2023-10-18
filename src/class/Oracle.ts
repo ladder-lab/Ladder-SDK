@@ -37,7 +37,6 @@ export class Oracle {
         const nftType = await this.getAddressType(nftAddress)
         console.log("🚀 ~ nftType:", nftType)
         const currencyAddress = USDT[this.network.chain]
-        console.log("🚀 ~ currencyAddress:", currencyAddress)
 
         if (nftType === 'Erc721') {
             const erc721Route = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.provider)
@@ -68,7 +67,7 @@ export class Oracle {
             ]
             const price = await queryMethod(amount, route)
 
-            console.log(price[direction === 'Buy' ? 0 : 1].toString())
+            // console.log(price[direction === 'Buy' ? 0 : 1].toString())
 
             return price[direction === 'Buy' ? 0 : 1].toString()
         } else {

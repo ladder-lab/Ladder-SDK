@@ -1,6 +1,8 @@
 # Ladder-sdk-beta
 
-> version: 0.0.3
+> version: 0.0.5
+> 
+> Support Chains: Polygon、Sepolia
 
 
 ## Quick Start
@@ -44,6 +46,8 @@ You can do any major operation you want to do with ladder through Client
 
 - swapExactErc721ForTokens
 - swapExactTokensForErc721
+- addLiquidity721
+- addLiquidityETH721
 - swapExactErc1155ForTokens (Coming soon)
 - swapExactTokensForErc1155 (Coming soon)
 

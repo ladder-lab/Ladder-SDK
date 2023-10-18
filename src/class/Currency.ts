@@ -1,12 +1,12 @@
-import { ethers } from "ethers";
+import { ContractTransaction, Wallet, ethers } from "ethers";
 import { SupportChainType } from "../web3";
-import { Multicall__factory, UniversalErc20, UniversalErc20__factory } from "../web3/types";
+import { Multicall__factory, UniversalErc20, UniversalErc20__factory, UniversalErc721, UniversalErc721__factory } from "../web3/types";
 import { ChainNetwork } from "./ChainNetwork";
 import invariant from "tiny-invariant";
 import { bn_fromWei } from "../utils";
 import { ZERO_ADDRESS } from '../constants'
 
-type CurrencyType = 'Native' | 'Erc20'
+type CurrencyType = 'Native' | 'Erc20' | 'Erc721'
 class CurrencyBase {
     protected provider: ethers.providers.Provider
     readonly chainNetwork: ChainNetwork
@@ -26,7 +26,7 @@ class CurrencyBase {
         this.address = address
         this.decimals = decimals
         this.symbol = symbol
-        this.name = name
+        this.name = name || 'Unknow Token'
     }
 
     public equals(other: CurrencyErc20): boolean {
@@ -44,7 +44,7 @@ export class CurrencyNative extends CurrencyBase {
 }
 
 export class CurrencyErc20 extends CurrencyBase {
-    public readonly contract: UniversalErc20
+    public contract: UniversalErc20
 
     constructor(chainNetwork: ChainNetwork, address: string, decimals?: number, symbol?: string, name?: string) {
         super(chainNetwork, 'Erc20', address, decimals, symbol, name)
@@ -55,6 +55,21 @@ export class CurrencyErc20 extends CurrencyBase {
         this.symbol = this.symbol || await this.contract.symbol()
         this.decimals = this.decimals || await this.contract.decimals()
         this.name = this.name || await this.contract.name()
+        return this
+    }
+}
+
+export class CurrencyErc721 extends CurrencyBase {
+    public contract: UniversalErc721
+
+    constructor(chainNetwork: ChainNetwork, address: string, symbol?: string, name?: string) {
+        super(chainNetwork, 'Erc721', address, 1, symbol, name)
+        this.contract = UniversalErc721__factory.connect(address, this.provider)
+    }
+
+    async initialize(): Promise<this> {
+        this.name = this.name || await this.contract.name()
+        this.symbol = this.symbol || await this.contract.symbol()
         return this
     }
 }

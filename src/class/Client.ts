@@ -1,8 +1,8 @@
 import { ethers } from 'ethers'
 import { ChainNetwork } from './ChainNetwork'
-import { RouteErc721__factory, UniversalErc20__factory, UniversalErc721__factory } from '../web3/types'
+import { RouteErc1155__factory, RouteErc721__factory, UniversalErc20__factory, UniversalErc721__factory } from '../web3/types'
 import { Checker } from './Checker'
-import { RouteErc721Address } from '../web3'
+import { RouteErc1155Address, RouteErc721Address } from '../web3'
 
 export class Client {
     private network: ChainNetwork
@@ -17,15 +17,12 @@ export class Client {
         this.network = network
         this.provider = network.provider
         this.signer = signer.connect(network.provider)
-
         this.checker = new Checker(network)
     }
 
 
 
     private generatePath(): string[] {
-
-
         return []
     }
 
@@ -80,7 +77,6 @@ export class Client {
             throw Error(`${tarErc20Address} is an invalid ERC20 NFT`)
         }
 
-
         const erc20Contract = UniversalErc20__factory.connect(tarErc20Address, this.provider)
         if ((await erc20Contract.allowance(this.signer.address, RouteErc721Address[this.network.chain])).lte(amountInMax)) {
             throw Error(`Token allowance limit is not enough for Route`)
@@ -91,11 +87,65 @@ export class Client {
         const _deadline = deadline || Math.floor(Date.now() / 1000) + 60 * 10
         const erc721NFTIDs: string[] = []
 
-        const erc20Route = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.provider)
+        const erc20Route = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.signer)
         const erc20RouteWithSigner = erc20Route.connect(this.signer)
+
         console.log(amountOut, amountInMax, path, erc721NFTIDs, _to, _deadline)
         return erc20RouteWithSigner.swapTokensForExactTokens(
             amountOut, amountInMax, path, erc721NFTIDs, _to, _deadline
         )
+    }
+
+    async addLiquidity721(params: {
+        token721: string,
+        nftIds: number[],
+        tokenB: `0x${string}`,
+        amountBDesired: string,
+        amountBMin: string
+    }) {
+        const { token721, nftIds, tokenB, amountBDesired, amountBMin } = params
+        const erc721RouteWithSigner = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.signer)
+
+        return erc721RouteWithSigner.addLiquidity721(
+            token721, nftIds, tokenB, amountBDesired, amountBMin,
+            this.signer.address,
+            Math.floor(Date.now() / 1000 + 3600)
+        )
+    }
+
+    async addLiquidityETH721(params: {
+        token721: string,
+        nftIds: number[],
+        amountETHMin: string
+    }) {
+        const { token721, nftIds, amountETHMin } = params
+        const erc721RouteWithSigner = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.signer)
+
+        return erc721RouteWithSigner.addLiquidityETH721(
+            token721, nftIds, nftIds.length, amountETHMin,
+            this.signer.address,
+            Math.floor(Date.now() / 1000 + 3600)
+        )
+    }
+
+  
+
+
+    async addLiquidity1155(params: {
+        token1155: string,
+        token1155Id: number,
+        tokenB: `0x${string}`,
+        amountADesired: string,
+        amountBDesired: string
+        amountAMin: string
+        amountBMin: string
+    }) {
+
+        console.log("🚀 ~ params:", params)
+
+        // const erc20Route = RouteErc1155__factory.connect(RouteErc1155Address[this.network.chain], this.provider)
+        // const erc20RouteWithSigner = erc20Route.connect(this.signer)
+
+        // erc20RouteWithSigner.addLiquidity1155()
     }
 }

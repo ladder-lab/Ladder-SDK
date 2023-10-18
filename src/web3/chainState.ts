@@ -74,7 +74,7 @@ export const chainStateList: Record<SupportChain, ChainStateInterface> = {
     [SupportChain.Sepolia]: {
         name: 'Sepolia Testnet',
         chainId: 11155111,
-        rpcUrls: ["https://ethereum-sepolia.blockpi.network/v1/rpc/public"],
+        rpcUrls: ["https://eth-sepolia.public.blastapi.io"],
         nativeCurrency: {
             name: 'Sepolia ETH',
             symbol: 'ETH',
