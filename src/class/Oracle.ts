@@ -29,14 +29,14 @@ export class Oracle {
         return nftType
     }
 
-    async getPrice(nftAddress: string, amount: number, direction: 'Sell' | 'Buy') {
+    async getPrice(nftAddress: string, amount: number, direction: 'Sell' | 'Buy', currency: string = USDT[this.network.chain]) {
         /**
          * 1. isNft(nftAddress) 判断是否是 NFT地址 / 721,1155
          * 2. 查询返回价格
          */
         const nftType = await this.getAddressType(nftAddress)
         console.log("🚀 ~ nftType:", nftType)
-        const currencyAddress = USDT[this.network.chain]
+        const currencyAddress = currency
 
         if (nftType === 'Erc721') {
             const erc721Route = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.provider)
