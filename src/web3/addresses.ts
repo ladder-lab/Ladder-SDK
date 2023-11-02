@@ -2,7 +2,7 @@ import { SupportChain } from "./type"
 
 export const RouteErc721Address: Record<string, string> = {
     [SupportChain.Sepolia]: "0x146ADA3E3A615CAdEBC06C1b02cBE3D040DcC3A0",
-    [SupportChain.Polygon]: "0xf434274C78CF5567D47D765420CDbf552d1C1067",
+    [SupportChain.Polygon]: "0x3Be46E10476F0E3688f5f52f7EE484a30d10975C",
     [SupportChain.Binance]: "0xb59a8c714515793bDB6Ae7614499ee33b2F2802d"
 }
 
