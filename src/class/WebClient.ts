@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { ethers, Signer } from 'ethers'
 import { ChainNetwork } from './ChainNetwork'
 import {
   RouteErc1155__factory,
@@ -9,16 +9,16 @@ import {
 import { Checker } from './Checker'
 import { RouteErc1155Address, RouteErc721Address } from '../web3'
 
-export class Client {
+export class WebClient {
   private network: ChainNetwork
   private provider: ethers.providers.JsonRpcProvider
-  private signer: ethers.Wallet
+  private signer?: Signer
   private checker: Checker
 
-  constructor(signer: ethers.Wallet, network: ChainNetwork) {
+  constructor(network: ChainNetwork, signer?: Signer) {
     this.network = network
     this.provider = network.provider
-    this.signer = signer.connect(network.provider)
+    this.signer = signer
     this.checker = new Checker(network)
   }
 
@@ -43,12 +43,18 @@ export class Client {
       throw Error(`${tarErc20Address} is an invalid ERC20 NFT`)
     }
 
+    if (!this.signer) {
+      throw Error(`Signer not found`)
+    }
+
+    const accountAddress = await this.signer.getAddress()
+
     const erc721Contract = UniversalErc721__factory.connect(tarErc721Address, this.provider)
-    if (await erc721Contract.isApprovedForAll(this.signer.address, RouteErc721Address[this.network.chain])) {
+    if (await erc721Contract.isApprovedForAll(this.signer.getAddress(), RouteErc721Address[this.network.chain])) {
       throw Error(`this NFT is not approved to Route`)
     }
 
-    const _to = to || this.signer.address
+    const _to = to || accountAddress
     const _deadline = deadline || Math.floor(Date.now() / 1000) + 60 * 10
     const erc721NFTIDs: string[] = []
 
@@ -75,12 +81,20 @@ export class Client {
       throw Error(`${tarErc20Address} is an invalid ERC20 NFT`)
     }
 
+    if (!this.signer) {
+      throw Error(`Signer not found`)
+    }
+
+    const accountAddress = await this.signer.getAddress()
+
     const erc20Contract = UniversalErc20__factory.connect(tarErc20Address, this.provider)
-    if ((await erc20Contract.allowance(this.signer.address, RouteErc721Address[this.network.chain])).lte(amountInMax)) {
+    const ret = await erc20Contract.allowance(accountAddress, RouteErc721Address[this.network.chain])
+    console.log('fdasfdsa', ret, amountInMax)
+    if ((await erc20Contract.allowance(accountAddress, RouteErc721Address[this.network.chain])).lte(amountInMax)) {
       throw Error(`Token allowance limit is not enough for Route`)
     }
 
-    const _to = to || this.signer.address
+    const _to = to || accountAddress
     const _deadline = deadline || Math.floor(Date.now() / 1000) + 60 * 10
     const erc721NFTIDs: string[] = []
 
@@ -98,6 +112,12 @@ export class Client {
     amountBDesired: string
     amountBMin: string
   }) {
+    if (!this.signer) {
+      throw Error(`Signer not found`)
+    }
+
+    const accountAddress = await this.signer.getAddress()
+
     const { token721, nftIds, tokenB, amountBDesired, amountBMin } = params
     const erc721RouteWithSigner = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.signer)
 
@@ -107,12 +127,18 @@ export class Client {
       tokenB,
       amountBDesired,
       amountBMin,
-      this.signer.address,
+      accountAddress,
       Math.floor(Date.now() / 1000 + 3600)
     )
   }
 
   async addLiquidityETH721(params: { token721: string; nftIds: number[]; amountETHMin: string }) {
+    if (!this.signer) {
+      throw Error(`Signer not found`)
+    }
+
+    const accountAddress = await this.signer.getAddress()
+
     const { token721, nftIds, amountETHMin } = params
     const erc721RouteWithSigner = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.signer)
 
@@ -121,7 +147,7 @@ export class Client {
       nftIds,
       nftIds.length,
       amountETHMin,
-      this.signer.address,
+      accountAddress,
       Math.floor(Date.now() / 1000 + 3600),
       { value: amountETHMin }
     )
