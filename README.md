@@ -1,4 +1,4 @@
-# Ladder-sdk-beta
+# @ladder-team/sdk
 
 > version: 0.0.5
 >
@@ -6,12 +6,12 @@
 
 ## Quick Start
 
-Use `npm` or `yarn` to install `Ladder-sdk-beta`
+Use `npm` or `yarn` to install `@ladder-team/sdk`
 
 ```shell
-npm install ladder-sdk-beta
+npm install @ladder-team/sdk
 or
-yarn add ladder-sdk-beta
+yarn add @ladder-team/sdk
 ```
 
 🔧 This is a sdk tool written in nodejs, fully compliant with the typescript specification.
@@ -106,7 +106,7 @@ const testClient = async (signer: ethers.Signer | undefined) => {
 
   // sell 721
   // const amountOutMin = await oracle.getPrice(tokenErc721, 1, 'Sell')
-  // const transaction = await client.swapExactErc721ForTokens(1, amountOutMin, [tokenErc721, tokenErc20])
+  // const transaction = await client.swapExactErc721ForTokens(1, amountOutMin, [tokenErc721, tokenErc20], ['4180'])
 
   console.log(transaction.hash)
   await transaction.wait()

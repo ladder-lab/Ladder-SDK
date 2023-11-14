@@ -1,13 +1,8 @@
 import { ethers, Signer } from 'ethers'
 import { ChainNetwork } from './ChainNetwork'
-import {
-  RouteErc1155__factory,
-  RouteErc721__factory,
-  UniversalErc20__factory,
-  UniversalErc721__factory
-} from '../web3/types'
+import { RouteErc721__factory, UniversalErc20__factory, UniversalErc721__factory } from '../web3/types'
 import { Checker } from './Checker'
-import { RouteErc1155Address, RouteErc721Address } from '../web3'
+import { RouteErc721Address } from '../web3'
 
 export class WebClient {
   private network: ChainNetwork
@@ -30,6 +25,7 @@ export class WebClient {
     amountIn: number,
     amountOutMin: string,
     path: string[],
+    erc721NFTIDs: string[],
     to?: string,
     deadline?: string
   ) {
@@ -50,13 +46,12 @@ export class WebClient {
     const accountAddress = await this.signer.getAddress()
 
     const erc721Contract = UniversalErc721__factory.connect(tarErc721Address, this.provider)
-    if (await erc721Contract.isApprovedForAll(this.signer.getAddress(), RouteErc721Address[this.network.chain])) {
+    if (!(await erc721Contract.isApprovedForAll(this.signer.getAddress(), RouteErc721Address[this.network.chain]))) {
       throw Error(`this NFT is not approved to Route`)
     }
 
     const _to = to || accountAddress
     const _deadline = deadline || Math.floor(Date.now() / 1000) + 60 * 10
-    const erc721NFTIDs: string[] = []
 
     const erc20Route = RouteErc721__factory.connect(RouteErc721Address[this.network.chain], this.provider)
     const erc20RouteWithSigner = erc20Route.connect(this.signer)
@@ -88,8 +83,6 @@ export class WebClient {
     const accountAddress = await this.signer.getAddress()
 
     const erc20Contract = UniversalErc20__factory.connect(tarErc20Address, this.provider)
-    const ret = await erc20Contract.allowance(accountAddress, RouteErc721Address[this.network.chain])
-    console.log('fdasfdsa', ret, amountInMax)
     if ((await erc20Contract.allowance(accountAddress, RouteErc721Address[this.network.chain])).lte(amountInMax)) {
       throw Error(`Token allowance limit is not enough for Route`)
     }
